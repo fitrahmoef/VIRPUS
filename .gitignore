@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -37,3 +38,14 @@ next-env.d.ts
 
 # backup
 *.backup
+
+# database
+prisma/*.db
+prisma/*.db-journal
+dev.db
+dev.db-journal
+
+# Google Cloud credentials
+*.json
+!package.json
+!tsconfig.json

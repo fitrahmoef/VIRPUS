@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  avatar    String?
+  badge     String?
+  points    Int      @default(0)
+  rank      Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  videos    Video[]
+  bookmarks Bookmark[]
+}
+
+model Book {
+  id          String   @id @default(cuid())
+  title       String
+  author      String
+  coverEmoji  String
+  coverGradient String?
+  videoCount  Int      @default(0)
+  likeCount   Int      @default(0)
+  description String?
+  content     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  videos      Video[]
+  bookmarks   Bookmark[]
+}
+
+model Video {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  prompt          String
+  style           String
+  duration        Int
+  status          String   @default("pending") // pending, processing, completed, failed
+  thumbnailEmoji  String?
+  thumbnailGradient String?
+  videoUrl        String?
+  veo3JobId       String?
+  viewCount       Int      @default(0)
+  likeCount       Int      @default(0)
+  commentCount    Int      @default(0)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  bookId          String?
+  book            Book?    @relation(fields: [bookId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, bookId])
+}

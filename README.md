@@ -11,10 +11,12 @@ Transform reading into viral content with VIRPUS - an innovative platform that c
 ## 🎯 Features
 
 - **📚 Digital Library**: Access to 1.2M+ books
-- **🎬 AI Video Generation**: Transform book scenes into viral videos
+- **🎬 AI Video Generation**: Transform book scenes into viral videos with Google Veo3
 - **🔥 Trending Content**: Discover viral videos created by the community
 - **👤 User Dashboard**: Track your creations and analytics
 - **🎨 Multiple Art Styles**: Anime, Flat Design, 3D Realistic
+- **🚀 REST API**: Full-featured backend with Next.js API routes
+- **💾 Database**: SQLite with Prisma ORM
 
 ## 🚀 Quick Start
 
@@ -36,12 +38,42 @@ cd VIRPUS
 npm install
 ```
 
-3. Run the development server:
+3. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env and configure your Google Cloud credentials
+```
+
+4. Initialize the database:
+```bash
+npm run db:generate  # Generate Prisma client
+npm run db:push      # Create database schema
+npm run db:seed      # Seed with sample data
+```
+
+5. Run the development server:
 ```bash
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+### Google Veo3 Setup
+
+To enable AI video generation:
+
+1. Create a Google Cloud project at [console.cloud.google.com](https://console.cloud.google.com)
+2. Enable the Vertex AI API
+3. Create a service account with Vertex AI permissions
+4. Download the service account key JSON file
+5. Update `.env` with your credentials:
+```env
+GOOGLE_CLOUD_PROJECT="your-project-id"
+GOOGLE_CLOUD_LOCATION="us-central1"
+GOOGLE_APPLICATION_CREDENTIALS="path/to/service-account-key.json"
+```
+
+For detailed backend documentation, see [BACKEND.md](BACKEND.md).
 
 ## 📦 Build & Deploy
 
@@ -100,11 +132,19 @@ serve out
 
 ## 🛠️ Technology Stack
 
+### Frontend
 - **Framework**: Next.js 16.0 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4.1 + Custom CSS
 - **Runtime**: React 19.2
 - **Build Tool**: Turbopack
+
+### Backend
+- **API**: Next.js API Routes
+- **Database**: SQLite with Prisma ORM
+- **AI**: Google Vertex AI (Veo3)
+- **Validation**: Zod
+- **TypeScript**: Full type safety
 
 ## 📁 Project Structure
 
@@ -123,10 +163,47 @@ VIRPUS/
 
 ## 📝 Available Scripts
 
+### Development
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
-- `npm start` - Start production server (not applicable for static export)
+- `npm start` - Start production server
 - `npm run lint` - Run ESLint
+
+### Database
+- `npm run db:generate` - Generate Prisma client
+- `npm run db:push` - Push schema to database
+- `npm run db:migrate` - Create database migration
+- `npm run db:seed` - Seed database with sample data
+- `npm run db:studio` - Open Prisma Studio (database GUI)
+
+## 📡 API Endpoints
+
+The backend provides REST APIs for:
+
+- **Videos**: Generate, list, and manage AI-generated videos
+- **Users**: User management and profiles
+- **Books**: Book library management
+
+Example API usage:
+```typescript
+// Generate a video
+const response = await fetch('/api/videos/generate', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    title: 'Jakarta 2157',
+    prompt: 'Futuristic Jakarta with hologram advertisements...',
+    style: 'anime',
+    duration: 45,
+    userId: 'user-id'
+  })
+});
+
+// Get trending videos
+const videos = await fetch('/api/videos?trending=true&limit=10');
+```
+
+For complete API documentation, see [BACKEND.md](BACKEND.md).
 
 ## 🎨 Customization
 
